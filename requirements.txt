@@ -1,0 +1,27 @@
+# Manipulation de données
+pandas
+numpy
+
+# Requêtes HTTP (APIs météo / Nominatim)
+requests
+
+# Scraping Booking.com
+selenium
+parsel
+
+# Data lake AWS S3
+boto3
+
+# Entrepôt PostgreSQL (Neon DB)
+psycopg2-binary
+
+# Gestion des secrets (.env)
+python-dotenv
+
+# Visualisation
+plotly
+kaleido   # export PNG des figures Plotly
+
+# Notebook
+jupyter
+nbformat

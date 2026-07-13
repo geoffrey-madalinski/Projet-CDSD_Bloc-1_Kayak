@@ -1,0 +1,18 @@
+# Secrets — ne jamais versionner
+.env
+
+# Python
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+venv/
+.venv/
+
+# Données générées (gros volumes, regénérables)
+data/raw/*
+data/processed/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+
+# Figures HTML lourdes (gardées localement, regénérables)
+reports/figures/*.html
