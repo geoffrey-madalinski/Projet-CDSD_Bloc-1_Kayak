@@ -9,8 +9,6 @@ weather and hotel data.<br>
 The pipeline orchestrates the full chain: **collection → data lake → ETL → data
 warehouse → visualisation**.
 
----
-
 ## Problem statement
 
 A user study revealed that 70% of travellers would like more information about their
@@ -18,8 +16,6 @@ destination, and that people are sceptical of content from brands they don't kno
 The marketing team therefore wants a data-driven app that recommends the best
 destinations and hotels at any time. The team starts with no data, so the task is to
 **build the underlying data infrastructure from scratch**.
-
----
 
 ## Objectives
 
@@ -29,8 +25,6 @@ destinations and hotels at any time. The team starts with no data, so the task i
 - Store all of the above as CSV files in a **data lake** on AWS S3
 - Extract, transform and load (ETL) the cleaned data from the data lake into a **data warehouse** on NeonDB
 
----
-
 ## Technical stack
 
 - **Collection**: Nominatim (geocoding), OpenWeatherMap One Call (7-day forecast), Selenium + Parsel (Booking.com scraping)
@@ -39,8 +33,6 @@ destinations and hotels at any time. The team starts with no data, so the task i
 - **Data warehouse**: Neon DB (serverless PostgreSQL)
 - **Visualisation**: Plotly
 - **Config & secrets**: python-dotenv
-
----
 
 ## Infrastructure overview
 
@@ -52,8 +44,6 @@ destinations and hotels at any time. The team starts with no data, so the task i
 | ETL | Python (pandas + psycopg2) | extract / transform / load |
 | Data warehouse | Neon DB (serverless PostgreSQL) | clean, queryable data |
 | Visualisation | Plotly | maps of destinations and hotels |
-
----
 
 ## Installation
 
@@ -73,8 +63,6 @@ AWS_SECRET_ACCESS_KEY=YOUR_SECRET_ACCESS_KEY
 DATABASE_URL=postgresql://...neon.tech/...
 ```
 
----
-
 ## Usage
 
 ```bash
@@ -84,8 +72,6 @@ jupyter notebook Projet_Kayak_GM.ipynb
 The business logic lives in the `src/` package (one module per step). The notebook
 simply calls each module in order, keeping it readable and the functions reusable
 and testable elsewhere.
-
----
 
 ## Project structure
 
@@ -113,8 +99,6 @@ Projet_Kayak/
 └── README.md
 ```
 
----
-
 ## Approach
 
 1. **Imports & configuration** — make `src/` importable, load secret keys from `.env`
@@ -124,8 +108,6 @@ Projet_Kayak/
 5. **ETL** — extract from S3, transform (deduplicate, validate value ranges and GPS coordinates, clean text), load into Neon DB; the pipeline is **replayable** (tables are cleared before reloading)
 6. **Visualisation** — two Plotly maps: top 5 destinations by weather score, and the top 20 best-rated hotels
 7. **Conclusion** — synthesis of the complete infrastructure
-
----
 
 ## The `weather_score`
 
@@ -137,15 +119,11 @@ Each city starts at 100 points; penalties are applied across three criteria and 
 
 Ideal values and penalties are configurable in `src/config.py`.
 
----
-
 ## Notes & caveats
 
 - **Hotel scraping is slow** (one browser session per city).
 - Booking's CSS classes change regularly: if a city returns 0 hotels, update the selectors in `src/hotels.py`.
 - **GDPR**: only *public* data about *establishments* is collected — no personal user data is processed.
-
----
 
 ## Author
 
