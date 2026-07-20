@@ -48,8 +48,8 @@ destinations and hotels at any time. The team starts with no data, so the task i
 ## Installation
 
 ```bash
-git clone https://github.com/geoffrey-madalinski/Projet_Kayak.git
-cd Projet_Kayak
+git clone https://github.com/geoffrey-madalinski/Projet-CDSD_Bloc-1_Kayak.git
+cd Projet-CDSD_Bloc-1_Kayak
 pip install -r requirements.txt
 ```
 
