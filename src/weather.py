@@ -5,15 +5,14 @@ Collecte des données météo pour les 35 villes.
 
 Pour chaque ville :
   1. on récupère ses coordonnées GPS via Nominatim (OpenStreetMap)
-  2. on récupère les prévisions sur 7 jours via OpenWeatherMap One Call 4.0
+  2. on récupère les prévisions sur 7 jours via OpenWeatherMap One Call 3.0
   3. on calcule un "weather score" résumant la qualité du temps
 
 Le résultat est un DataFrame propre, prêt à être sauvegardé en CSV.
 """
 
 import time
-from collections import defaultdict
-from datetime import date, datetime
+from datetime import date
 
 import requests
 import pandas as pd
@@ -53,54 +52,37 @@ def geocoder_ville(ville):
     return latitude, longitude, pays
 
 
-def recuperer_meteo(latitude, longitude, api_key):
+def recuperer_meteo(latitude, longitude, api_key, n_jours=config.NB_JOURS_PREVISION):
     """
-    Renvoie la liste des prévisions journalières (5 jours) pour un point GPS,
+    Renvoie la liste des prévisions journalières pour un point GPS,
     ou None en cas d'échec.
 
-    Utilise /data/2.5/forecast (gratuit, sans souscription) qui fournit des
-    mesures toutes les 3h sur 5 jours — on les agrège par jour.
+    Utilise l'API One Call 3.0 d'OpenWeatherMap, qui expose directement un
+    tableau `daily` de 8 jours : on ne garde que les `n_jours` premiers.
+    L'énoncé demande la fenêtre des 7 prochains jours.
+
+    Chaque entrée `daily` contient déjà temp.day, humidity, rain (mm) et pop :
+    aucune agrégation n'est nécessaire, contrairement à /data/2.5/forecast qui
+    ne fournit que des mesures par créneaux de 3h sur 5 jours.
     """
     params = {
         "lat": latitude,
         "lon": longitude,
         "appid": api_key,
         "units": "metric",
-        "cnt": 40,  # 5 jours × 8 mesures de 3h
+        # On ne demande que le journalier : le reste serait téléchargé pour rien.
+        "exclude": "current,minutely,hourly,alerts",
     }
     reponse = requests.get(config.OWM_ONECALL_URL, params=params, timeout=20)
 
     if reponse.status_code != 200:
         return None
 
-    items = reponse.json().get("list", [])
-    if not items:
+    daily = reponse.json().get("daily", [])
+    if not daily:
         return None
 
-    # Agrégation des mesures 3h en journées
-    jours = defaultdict(lambda: {"temps": [], "humidites": [], "pluies": [], "pops": [], "dt": None})
-    for item in items:
-        jour = date.fromtimestamp(item["dt"]).isoformat()
-        jours[jour]["temps"].append(item["main"]["temp"])
-        jours[jour]["humidites"].append(item["main"]["humidity"])
-        jours[jour]["pluies"].append(item.get("rain", {}).get("3h", 0))
-        jours[jour]["pops"].append(item.get("pop", 0))
-        if jours[jour]["dt"] is None:
-            jours[jour]["dt"] = item["dt"]
-
-    # Conversion au format attendu par collecter_meteo
-    daily = []
-    for jour_str in sorted(jours.keys()):
-        j = jours[jour_str]
-        daily.append({
-            "dt": j["dt"],
-            "temp": {"day": sum(j["temps"]) / len(j["temps"])},
-            "humidity": sum(j["humidites"]) / len(j["humidites"]),
-            "rain": sum(j["pluies"]),
-            "pop": sum(j["pops"]) / len(j["pops"]),
-        })
-
-    return daily[:5]
+    return daily[:n_jours]
 
 
 def calculer_weather_score(temp_moy, humidite_moy, pluie_totale):

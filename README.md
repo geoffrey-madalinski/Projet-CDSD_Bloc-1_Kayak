@@ -27,7 +27,7 @@ destinations and hotels at any time. The team starts with no data, so the task i
 
 ## Technical stack
 
-- **Collection**: Nominatim (geocoding), OpenWeatherMap One Call (7-day forecast), Selenium + Parsel (Booking.com scraping)
+- **Collection**: Nominatim (geocoding), OpenWeatherMap One Call 3.0 (7-day forecast), Selenium + Parsel (Booking.com scraping)
 - **Data lake**: AWS S3 (boto3)
 - **ETL**: Python — Pandas, psycopg2
 - **Data warehouse**: Neon DB (serverless PostgreSQL)

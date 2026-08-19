@@ -4,7 +4,7 @@ config.py
 Point unique de configuration du projet.
 
 On regroupe ici tout ce qui peut changer (liste des villes, chemins, réglages
-du beauty score, noms de buckets...) pour ne pas avoir de "valeurs magiques"
+du weather score, noms de buckets...) pour ne pas avoir de "valeurs magiques"
 dispersées dans le reste du code.
 """
 
@@ -36,9 +36,11 @@ VILLES = [
 ]
 
 
-# --- Paramètres du Beauty Score ---------------------------------------------
+# --- Paramètres du Weather Score --------------------------------------------
 # Chacun a sa propre définition du "beau temps" (cf. énoncé). On définit ici
 # des valeurs "idéales" et des pénalités, faciles à ajuster.
+# Le score final est la MOYENNE des trois sous-scores calculés ci-dessous
+# (cf. weather.calculer_weather_score), bornée entre 0 et 100.
 TEMP_IDEALE = 20.0        # température parfaite en °C
 HUMIDITE_IDEALE = 40.0    # humidité parfaite en %
 PLUIE_IDEALE = 0.0        # pas de pluie = idéal
@@ -50,7 +52,13 @@ PENALITE_PAR_PCT_HUM = 1.0   # points perdus par % d'humidité au-dessus de 40%
 
 # --- APIs --------------------------------------------------------------------
 NOMINATIM_URL = "https://nominatim.openstreetmap.org/search"
-OWM_ONECALL_URL = "https://api.openweathermap.org/data/2.5/forecast"
+
+# One Call 3.0 renvoie un tableau `daily` de 8 jours de prévisions.
+# Elle exige la souscription "One Call by Call" (palier gratuit : 1000 appels/jour).
+OWM_ONECALL_URL = "https://api.openweathermap.org/data/3.0/onecall"
+
+# Fenêtre de prévision demandée par l'énoncé : les 7 prochains jours.
+NB_JOURS_PREVISION = 7
 
 # Adresse e-mail de contact exigée par la politique d'usage de Nominatim.
 # À remplacer par la tienne avant exécution.
