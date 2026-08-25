@@ -132,13 +132,6 @@ def creer_tables():
     non un compteur technique.
       - weather : city
       - hotels  : (city, hotel_name)
-
-    L'ancien schéma utilisait `id INTEGER PRIMARY KEY`, or cet id est un simple
-    compteur produit par enumerate() à la collecte. Si une ville échouait, tous
-    les id suivants se décalaient et la même ville changeait d'identifiant d'un
-    run à l'autre. Une clé naturelle rend au contraire l'upsert de load()
-    fiable : relancer le pipeline met à jour les lignes existantes au lieu d'en
-    créer des doublons. L'id reste conservé comme colonne, l'énoncé le demande.
     """
     conn = _connexion()
     cur = conn.cursor()
@@ -181,12 +174,7 @@ def creer_tables():
 
 def load(df_weather, df_hotels):
     """
-    Insère les DataFrames nettoyés dans Neon DB, par upsert.
-
-    Idempotence : au lieu de vider les tables avant de recharger, on utilise
-    INSERT ... ON CONFLICT DO UPDATE sur la clé naturelle. Relancer le pipeline
-    met à jour les lignes existantes et insère uniquement les nouvelles, sans
-    jamais créer de doublon et sans fenêtre pendant laquelle la table est vide.
+    Insère les DataFrames nettoyés dans Neon DB.
     """
     conn = _connexion()
     cur = conn.cursor()
@@ -246,7 +234,7 @@ def load(df_weather, df_hotels):
 
 
 def verifier():
-    """Petit contrôle final : compte les lignes et affiche le top 5 destinations."""
+    """Contrôle final : compte les lignes et affiche le top 5 destinations."""
     conn = _connexion()
     cur = conn.cursor()
 
