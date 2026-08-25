@@ -25,7 +25,6 @@ from . import config
 def _creer_driver():
     """
     Crée un navigateur Chrome "headless" (sans interface graphique).
-
     Les options --no-sandbox / --disable-dev-shm-usage évitent les plantages
     fréquents quand on tourne dans un conteneur ou un environnement limité.
     """
@@ -50,7 +49,6 @@ def _construire_url(ville):
 def scraper_ville(ville, n_hotels=3):
     """
     Renvoie un DataFrame des `n_hotels` meilleurs hôtels d'une ville.
-
     On ouvre la page, on scrolle un peu pour déclencher le chargement
     dynamique, puis on parse le HTML obtenu.
     """
@@ -108,7 +106,6 @@ def scraper_ville(ville, n_hotels=3):
 def scraper_toutes_villes(villes=None, n_hotels=3):
     """
     Boucle sur toutes les villes et concatène les résultats.
-
     On ajoute un id unique global à la fin pour la cohérence avec la base.
     """
     if villes is None:
