@@ -8,7 +8,7 @@ Conformément au livrable demandé, on produit deux cartes :
   - Carte 2 : les 20 hôtels les plus populaires (meilleures notes)
 
 Chaque figure est exportée en HTML (interactif) et en PNG (statique, pour
-un rapport). Le PNG nécessite le paquet `kaleido`.
+un rapport).
 """
 
 import plotly.express as px
@@ -18,7 +18,7 @@ from . import config
 
 
 def _hotels_par_ville(df_hotels, ville):
-    """Construit le petit texte 'Top 3 hôtels' affiché au survol d'une ville."""
+    """Construit le texte 'Top 3 hôtels' affiché au survol d'une ville."""
     hotels = df_hotels[df_hotels["city"] == ville].sort_values("note", ascending=False)
     if hotels.empty:
         return "Aucun hôtel trouvé"
@@ -32,7 +32,6 @@ def _hotels_par_ville(df_hotels, ville):
 def carte_top_destinations(df_weather, df_hotels, n=35):
     """
     Carte des n meilleures destinations (par weather score).
-
     La taille et la couleur des points reflètent le weather score ; le survol
     affiche le top 3 des hôtels de la ville.
     """
@@ -96,7 +95,6 @@ def carte_top_destinations(df_weather, df_hotels, n=35):
 def carte_top_hotels(df_weather, df_hotels, n=20):
     """
     Carte des n hôtels les mieux notés, toutes villes confondues.
-
     On récupère les coordonnées via la ville (jointure avec df_weather), ce
     qui évite un géocodage supplémentaire des hôtels.
     """
@@ -132,7 +130,6 @@ def carte_top_hotels(df_weather, df_hotels, n=20):
 def sauvegarder(fig, nom_fichier):
     """
     Sauvegarde une figure dans reports/figures/ en HTML et (si possible) PNG.
-
     Le PNG dépend de `kaleido` ; s'il n'est pas installé, on garde au moins
     le HTML interactif et on prévient l'utilisateur.
     """
