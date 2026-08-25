@@ -23,9 +23,7 @@ from . import config
 def geocoder_ville(ville):
     """
     Renvoie (latitude, longitude, pays) pour une ville, ou None si échec.
-
-    On utilise Nominatim, gratuit et sans clé, mais qui impose une limite
-    d'environ 1 requête/seconde : on respecte ça côté appelant.
+    On utilise Nominatim, gratuit et sans clé.
     """
     params = {
         "q": ville,
@@ -56,14 +54,9 @@ def recuperer_meteo(latitude, longitude, api_key, n_jours=config.NB_JOURS_PREVIS
     """
     Renvoie la liste des prévisions journalières pour un point GPS,
     ou None en cas d'échec.
-
     Utilise l'API One Call 3.0 d'OpenWeatherMap, qui expose directement un
     tableau `daily` de 8 jours : on ne garde que les `n_jours` premiers.
     L'énoncé demande la fenêtre des 7 prochains jours.
-
-    Chaque entrée `daily` contient déjà temp.day, humidity, rain (mm) et pop :
-    aucune agrégation n'est nécessaire, contrairement à /data/2.5/forecast qui
-    ne fournit que des mesures par créneaux de 3h sur 5 jours.
     """
     params = {
         "lat": latitude,
@@ -88,7 +81,6 @@ def recuperer_meteo(latitude, longitude, api_key, n_jours=config.NB_JOURS_PREVIS
 def calculer_weather_score(temp_moy, humidite_moy, pluie_totale):
     """
     Calcule un score de 0 à 100 résumant la qualité du temps.
-
     Logique : on part de 100 et on retire des points selon 3 critères
     (température, humidité, pluie). Plus on s'éloigne de l'idéal, plus on perd.
     On fait ensuite la moyenne des trois sous-scores.
@@ -112,7 +104,6 @@ def calculer_weather_score(temp_moy, humidite_moy, pluie_totale):
 def collecter_meteo(api_key, villes=None, pause=1.0):
     """
     Boucle principale : construit le DataFrame météo des villes demandées.
-
     `pause` : temps d'attente entre deux villes pour respecter Nominatim.
     Renvoie un DataFrame avec une ligne par ville et un id unique.
     """
