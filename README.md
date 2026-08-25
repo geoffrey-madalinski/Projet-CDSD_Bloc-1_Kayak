@@ -6,8 +6,8 @@
 Building an end-to-end data infrastructure for Kayak's marketing team, which wants
 to launch an app that **recommends holiday destinations and hotels** based on real
 weather and hotel data.<br>
-The pipeline orchestrates the full chain: **collection → data lake → ETL → data
-warehouse → visualisation**.
+The pipeline orchestrates the full chain: **collection -> data lake -> ETL → data
+warehouse -> visualisation**.
 
 ## Problem statement
 
@@ -29,7 +29,7 @@ destinations and hotels at any time. The team starts with no data, so the task i
 
 - **Collection**: Nominatim (geocoding), OpenWeatherMap One Call 3.0 (7-day forecast), Selenium + Parsel (Booking.com scraping)
 - **Data lake**: AWS S3 (boto3)
-- **ETL**: Python — Pandas, psycopg2
+- **ETL**: Python - Pandas, psycopg2
 - **Data warehouse**: Neon DB (serverless PostgreSQL)
 - **Visualisation**: Plotly
 - **Config & secrets**: python-dotenv
@@ -101,21 +101,21 @@ Projet-CDSD_Bloc-1_Kayak/
 
 ## Approach
 
-1. **Imports & configuration** — make `src/` importable, load secret keys from `.env`
-2. **Weather collection** — GPS via Nominatim, 7-day forecast via OpenWeatherMap, then a `weather_score` (0–100) summarising forecast quality
-3. **Hotel collection** — scrape Booking.com (Selenium + Parsel) for the top 3 hotels per city (name, rating, description, link)
-4. **Data lake** — save CSVs locally, then upload them to an S3 bucket
-5. **ETL** — extract from S3, transform (deduplicate, validate value ranges and GPS coordinates, clean text), load into Neon DB; the pipeline is **replayable** (tables are cleared before reloading)
-6. **Visualisation** — two Plotly maps: top 5 destinations by weather score, and the top 20 best-rated hotels
-7. **Conclusion** — synthesis of the complete infrastructure
+1. **Imports & configuration** - make `src/` importable, load secret keys from `.env`
+2. **Weather collection** - GPS via Nominatim, 7-day forecast via OpenWeatherMap, then a `weather_score` (0–100) summarising forecast quality
+3. **Hotel collection** - scrape Booking.com (Selenium + Parsel) for the top 3 hotels per city (name, rating, description, link)
+4. **Data lake** - save CSVs locally, then upload them to an S3 bucket
+5. **ETL** - extract from S3, transform (deduplicate, validate value ranges and GPS coordinates, clean text), load into Neon DB; the pipeline is **replayable** (tables are cleared before reloading)
+6. **Visualisation** - two Plotly maps: top 5 destinations by weather score, and the top 20 best-rated hotels
+7. **Conclusion** - synthesis of the complete infrastructure
 
 ## The `weather_score`
 
 Each city starts at 100 points; penalties are applied across three criteria and then averaged:
 
-- **temperature** — points lost the further it is from 20 °C
-- **humidity** — points lost beyond 40%
-- **rain** — points lost per mm accumulated over the week
+- **temperature** - points lost the further it is from 20 °C
+- **humidity** - points lost beyond 40%
+- **rain** - points lost per mm accumulated over the week
 
 Ideal values and penalties are configurable in `src/config.py`.
 
@@ -123,7 +123,7 @@ Ideal values and penalties are configurable in `src/config.py`.
 
 - **Hotel scraping is slow** (one browser session per city).
 - Booking's CSS classes change regularly: if a city returns 0 hotels, update the selectors in `src/hotels.py`.
-- **GDPR**: only *public* data about *establishments* is collected — no personal user data is processed.
+- **GDPR**: only *public* data about *establishments* is collected - no personal user data is processed.
 
 ## Author
 
