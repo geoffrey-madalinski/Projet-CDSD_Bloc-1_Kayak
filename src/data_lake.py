@@ -6,10 +6,6 @@ Gestion du data lake AWS S3.
 Le data lake stocke les fichiers bruts/nettoyés tels quels (ici en CSV).
 C'est une zone de stockage peu coûteuse et capable d'accueillir de gros
 volumes : on y dépose les données avant l'étape ETL vers l'entrepôt.
-
-Les identifiants AWS ne sont JAMAIS écrits ici : ils sont lus depuis
-les variables d'environnement (chargées depuis le .env), pour rester
-conforme aux bonnes pratiques de sécurité.
 """
 
 import os
@@ -40,7 +36,6 @@ def uploader_csv(chemin_local, nom_objet, bucket=None):
 def telecharger_csv(nom_objet, bucket=None):
     """
     Lit un CSV directement depuis S3 et le renvoie comme DataFrame.
-
     On lit le flux sans le sauvegarder sur disque : utile pour l'étape
     Extract de l'ETL.
     """
