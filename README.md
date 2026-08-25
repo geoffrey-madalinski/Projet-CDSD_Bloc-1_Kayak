@@ -6,7 +6,7 @@
 Building an end-to-end data infrastructure for Kayak's marketing team, which wants
 to launch an app that **recommends holiday destinations and hotels** based on real
 weather and hotel data.<br>
-The pipeline orchestrates the full chain: **collection -> data lake -> ETL → data
+The pipeline orchestrates the full chain: **collection -> data lake -> ETL -> data
 warehouse -> visualisation**.
 
 ## Problem statement
